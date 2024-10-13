@@ -77,8 +77,17 @@ public_users.get('/title/:title',function (req, res) {
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+
+  let isbn = req.params.isbn;
+
+  // Return 200 if any book with the same isbn is found, otherwise 404
+  if (books[isbn]) {
+    return res.status(200).send(
+      JSON.stringify(books[isbn].reviews, null, 4)
+    );
+  } else {
+    return res.status(404).send('The provided ISBN returned no book.');
+  }
 });
 
 module.exports.general = public_users;
