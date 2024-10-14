@@ -5,8 +5,12 @@ const regd_users = express.Router();
 
 let users = [];
 
-const isValid = (username)=>{ //returns boolean
-//write code to check is the username is valid
+const isValid = (username, req)=>{ //returns boolean
+
+  if(req.session.authorization.username === username) {
+    return true;
+  }
+  return false;
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
@@ -53,8 +57,24 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+
+  let isbn = req.params.isbn;
+  let username = req.body.username;
+  let review = req.body.review;
+
+  if(!isValid(username, req)) {
+    return res.status(401).json({ message: 'The provided user is not logged in' });
+  }
+
+  // Return 200 if any book with the same isbn is found, otherwise 404
+  if (books[isbn]) {
+    let added = books[isbn].reviews[username]? false : true;
+    books[isbn].reviews[username] = review;
+
+    return res.status(200).json({'message': 'The review has been '+ (added? 'added':'modified')});
+  } else {
+    return res.status(404).send('The provided ISBN returned no book.');
+  }
 });
 
 module.exports.authenticated = regd_users;
