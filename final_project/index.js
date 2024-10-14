@@ -8,7 +8,16 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
+app.use(
+    "/customer",
+    session(
+        {
+            secret:"078DC9C9A5A29BC028E5020C4BBA7D3F558509470BCF27B75F954BC1273B99D1",
+            resave: true,
+            saveUninitialized: true
+        }
+    )
+);
 
 app.use("/customer/auth/*", function auth(req,res,next){
     // Check if user is logged in and has valid access token
@@ -21,11 +30,11 @@ app.use("/customer/auth/*", function auth(req,res,next){
                 req.user = user;
                 next(); // Proceed to the next middleware
             } else {
-                return res.status(403).json({ message: "User not authenticated" });
+                return res.status(401).json({ message: "User not authenticated" });
             }
         });
     } else {
-        return res.status(403).json({ message: "User not logged in" });
+        return res.status(401).json({ message: "User not logged in" });
     }
 });
 
