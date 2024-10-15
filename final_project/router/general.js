@@ -67,14 +67,29 @@ public_users.get('/isbn/:isbn',function (req, res) {
 
   let isbn = req.params.isbn;
 
-  // Return 200 if any book with the same isbn is found, otherwise 404
-  if (books[isbn]) {
-    return res.status(200).send(
-      JSON.stringify(books[isbn], null, 4)
-    );
-  } else {
-    return res.status(404).send('The provided ISBN returned no book.');
-  }
+  const booksCall = new Promise((resolve, reject) => {
+
+    try {
+        resolve(JSON.stringify(books[isbn], null, 4));
+    } catch (err) {
+        reject(err);
+    }
+  });
+
+  booksCall.then(
+
+    (data) => {
+      if(data) {
+        return res.status(200).send(data);
+      } else {
+        return res.status(404).send('The provided ISBN returned no book.');
+      }
+    },
+
+    (err) => {
+      return res.status(500).json({'message': 'An error occurred while retrieving the books'});
+    }
+  );
  });
 
 // Get book details based on author
