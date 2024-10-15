@@ -41,8 +41,24 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
 
-  return res.status(200).send(
-    JSON.stringify(books, null, 4)
+  const booksCall = new Promise((resolve, reject) => {
+
+    try {
+        resolve(JSON.stringify(books, null, 4));
+    } catch (err) {
+        reject(err);
+    }
+  });
+
+  booksCall.then(
+
+    (data) => {
+      return res.status(200).send(data);
+    },
+
+    (err) => {
+      return res.status(500).json({'message': 'An error occurred while retrieving the books'});
+    }
   );
 });
 
