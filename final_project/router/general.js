@@ -65,12 +65,12 @@ public_users.get('/',function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
 
-  let isbn = req.params.isbn;
+  const isbn = req.params.isbn;
 
   const booksCall = new Promise((resolve, reject) => {
 
     try {
-        resolve(JSON.stringify(books[isbn], null, 4));
+        resolve(books[isbn]? JSON.stringify(books[isbn], null, 4) : null);
     } catch (err) {
         reject(err);
     }
@@ -95,7 +95,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
 
-  let author = req.params.author;
+  const author = req.params.author;
 
   const booksCall = new Promise((resolve, reject) => {
 
@@ -107,7 +107,7 @@ public_users.get('/author/:author',function (req, res) {
           foundBooks[isbn] = books[isbn];
         }
       }
-      resolve(JSON.stringify(foundBooks, null, 4));
+      resolve(Object.keys(foundBooks).length > 0? JSON.stringify(foundBooks, null, 4) : null);
     } catch (err) {
       reject(err);
     }
@@ -132,7 +132,7 @@ public_users.get('/author/:author',function (req, res) {
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
 
-  let title = req.params.title;
+  const title = req.params.title;
 
   const booksCall = new Promise((resolve, reject) => {
 
@@ -144,7 +144,7 @@ public_users.get('/title/:title',function (req, res) {
           foundBooks[isbn] = books[isbn];
         }
       }
-      resolve(JSON.stringify(foundBooks, null, 4));
+      resolve(Object.keys(foundBooks).length > 0? JSON.stringify(foundBooks, null, 4) : null);
     } catch (err) {
       reject(err);
     }
