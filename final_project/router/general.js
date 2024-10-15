@@ -133,21 +133,37 @@ public_users.get('/author/:author',function (req, res) {
 public_users.get('/title/:title',function (req, res) {
 
   let title = req.params.title;
-  let book = null;
 
-  for(let isbn in books) {
-    if(title === books[isbn].title) {
-      book = books[isbn];
+  const booksCall = new Promise((resolve, reject) => {
+
+    try {
+      let book = null;
+
+      for(let isbn in books) {
+        if(title === books[isbn].title) {
+          book = books[isbn];
+        }
+      }
+      resolve(JSON.stringify(book, null, 4));
+    } catch (err) {
+      reject(err);
     }
-  }
-  // Return 200 if any book with the same title is found, otherwise 404
-  if (book) {
-    return res.status(200).send(
-      JSON.stringify(book, null, 4)
-    );
-  } else {
-    return res.status(404).send('The provided title returned no book.');
-  }
+  });
+
+  booksCall.then(
+
+    (data) => {
+      if(data) {
+        return res.status(200).send(data);
+      } else {
+        return res.status(404).send('The provided title returned no book.');
+      }
+    },
+
+    (err) => {
+      return res.status(500).json({'message': 'An error occurred while retrieving the books'});
+    }
+  );
 });
 
 //  Get book review
