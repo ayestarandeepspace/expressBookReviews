@@ -100,14 +100,14 @@ public_users.get('/author/:author',function (req, res) {
   const booksCall = new Promise((resolve, reject) => {
 
     try {
-      let book = null;
+      let foundBooks = {};
 
       for(let isbn in books) {
         if(author === books[isbn].author) {
-          book = books[isbn];
+          foundBooks[isbn] = books[isbn];
         }
       }
-      resolve(JSON.stringify(book, null, 4));
+      resolve(JSON.stringify(foundBooks, null, 4));
     } catch (err) {
       reject(err);
     }
@@ -137,14 +137,14 @@ public_users.get('/title/:title',function (req, res) {
   const booksCall = new Promise((resolve, reject) => {
 
     try {
-      let book = null;
+      let foundBooks = {};
 
       for(let isbn in books) {
         if(title === books[isbn].title) {
-          book = books[isbn];
+          foundBooks[isbn] = books[isbn];
         }
       }
-      resolve(JSON.stringify(book, null, 4));
+      resolve(JSON.stringify(foundBooks, null, 4));
     } catch (err) {
       reject(err);
     }
